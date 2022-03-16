@@ -1,0 +1,102 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+# Module 1 - Basics [Solutions]
+#### Mohit Sonkamble
+
+```{R}
+# Loading Libraries
+library(readr)
+```
+
+```{r}
+# Loading the Dataset
+air <- read_csv("data/airline.csv", show_col_types = FALSE)
+```
+### **BASICS**
+
+1) Create a variable called 'x' that contains the mean flight delay.
+```{r}
+x <- mean(air$DepDelay, na.rm = TRUE)
+```
+
+2) Use functions in R to round 'x' to two decimal places and to two significant digits.
+```{r}
+round(x, digits = 2)
+```
+
+3) Create a vector of flight distances in units of kilometers rather than miles.
+```{r}
+kmsPerMile <- 1.60934
+distance_km = air$Distance * kmsPerMile
+print(c(distance_km[1], air$Distance[1]))
+```
+
+4) Create a boolean (TRUE/FALSE) vector indicating whether the departure delay is shorter than the arrival delay.
+```{r}
+delay_bool <- air$DepDelay < air$ArrDelay
+head(delay_bool)
+```
+
+### **USING THE IDEAS**
+
+5) Summarize the difference between the departure and arrival delays. Do flights tend to make up some of the delay time in flight?
+```{r}
+summary(air$ArrDelay - air$DepDelay)
+```
+
+6) Plot a histogram of the flight departure delays with negative delays set to zero, censoring delay times at a maximum of 60 minutes. Explore the effect of changing the number of bins in the histogram using the 'breaks' argument.
+```{r}
+delay <- air$DepDelay
+delay[delay < 0] <- 0
+delay[delay > 60] <- 60
+hist(delay)
+```
+
+7) Subset the data to flights going to Chicago (ORD) and Houston (IAH). Plot delay against scheduled departure time (CRSDepTime). Add a title to the plot. Now plot so that flights to Chicago are in one color and those to Houston in another, using the 'col' argument. What are some problems with the plot?
+```{r}
+air_subset <- air[air$Dest == 'ORD' | air$Dest == 'IAH', ]
+air_subset$color <- 'blue'
+air_subset$color[air_subset$Dest == 'IAH'] <- 'red'
+plot(air_subset$CRSDepTime, air_subset$DepDelay, 
+     col = air_subset$color, 
+     main = 'Departure Delay by the time of day')
+```
+
+8) Consider the following regression model. Figure out how to extract the R2 and residual standard error and store in new R variables.
+```{r}
+y <- rnorm(10)
+x <- rnorm(10)
+mod <- lm(y ~ x)
+summ <- summary(mod)
+```
+
+```{r}
+# Printing model summary
+print(summ)
+```
+
+```{r}
+# Extracting Rsquared
+r2 <- summ[["r.squared"]]
+print(r2)
+```
+```{r}
+# Extracting Residual Standard Error
+rse <- summ[['sigma']]
+print(rse)
+```
+
+### **ADVANCED**
+
+9) For flights to ORD and IAH, plot departure delay against time in days where day 1 is Jan 1 2005 and the last day is Dec 31 2008. As above, use different colors for the two different destinations.
+```{r}
+
+```
+
+10) Now modify the size of the points. Add a legend. Rotate the numbers on the y-axis so they are printed horizontally. Recall that `help(par)` will provide a lot of information.
+```{r}
+
+```
